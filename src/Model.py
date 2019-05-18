@@ -1,6 +1,6 @@
 import sys
 import tensorflow as tf
-
+import os
 
 class DecoderType:
 	BestPath = 0
@@ -22,6 +22,9 @@ class Model:
 		self.decoderType = decoderType
 		self.mustRestore = mustRestore
 		self.snapID = 0
+
+		os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+		tf.reset_default_graph()
 
 		# CNN
 		self.inputImgs = tf.placeholder(tf.float32, shape=(Model.batchSize, Model.imgSize[0], Model.imgSize[1]))
@@ -118,8 +121,8 @@ class Model:
 
 	def setupTF(self):
 		"initialize TF"
-		print('Python: '+sys.version)
-		print('Tensorflow: '+tf.__version__)
+		# print('Python: '+sys.version)
+		# print('Tensorflow: '+tf.__version__)
 
 		sess=tf.Session() # TF session
 
@@ -133,10 +136,10 @@ class Model:
 
 		# load saved model if available
 		if latestSnapshot:
-			print('Init with stored values from ' + latestSnapshot)
+			# print('Init with stored values from ' + latestSnapshot)
 			saver.restore(sess, latestSnapshot)
 		else:
-			print('Init with new values')
+			# print('Init with new values')
 			sess.run(tf.global_variables_initializer())
 
 		return (sess,saver)
